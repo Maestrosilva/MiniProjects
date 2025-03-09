@@ -1,0 +1,11 @@
+﻿  StringImpl.cpp
+C:\Users\ГЕРО\source\repos\StringImpl\StringImpl\String.h(121,24): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'StringImpl.cpp')
+  
+C:\Users\ГЕРО\source\repos\StringImpl\StringImpl\String.h(307,29): warning C4267: '+=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'StringImpl.cpp')
+  
+C:\Users\ГЕРО\source\repos\StringImpl\StringImpl\String.h(356,15): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'StringImpl.cpp')
+  
+  StringImpl.vcxproj -> C:\Users\ГЕРО\source\repos\StringImpl\x64\Debug\StringImpl.exe
