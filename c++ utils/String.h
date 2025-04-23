@@ -30,21 +30,35 @@ public:
     char getChar(size_t index) const;
 
     void out(std::ostream& direction = std::cout) const;
-    void append(const String& str);
-    void append(char ch);
+
+    String& append(const String& str);
+    String& append(char ch);
+
     void insert(char ch, size_t index);
     void insert(const String& str, size_t index);
+
     void removeAt(size_t index);
-    bool remove(const String& substr);
+    String& remove(const String& substr);
+
     short indexOf(const String& str) const;
     bool contains(const String& str) const;
+
+    void setCharAt(char ch, size_t index);
     void replaceAll(const String& oldStr, const String& newStr);
+
     void reverse();
+    String reversed() const;
+
     bool startsWith(const String& prefix) const;
     bool endsWith(const String& suffix) const;
+
     void toLower();
+    String lowered() const;
     void toUpper();
+    String uppered() const;
+
     String substr(size_t start, short len = -1) const;
+
     bool isEmpty() const;
     void clear();
 
@@ -57,9 +71,9 @@ public:
     bool operator!=(const String& other);
     char& operator[](size_t index) const;
 
-   void friend operator<<(std::ostream& direction, const String& str);
+    void friend operator<<(std::ostream& direction, const String& str);
 
-   String friend operator+(const String& str1, const String& str2);
+    String friend operator+(const String& str1, const String& str2);
 
     ~String();
 };
