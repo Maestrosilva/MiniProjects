@@ -34,31 +34,50 @@ public:
     T& get(size_t index) const;
 
     void out(std::ostream& direction = std::cout, const String& delimiter = ", ") const;
-    void push(const T& element);
+
+    Vector& push(const T& element);
     T& pop();
     T& peek() const;
+
     void add(const T& element, size_t index);
     void add(const Vector& vect, size_t index);
-    bool remove(const T& element);
+
+    Vector& remove(const T& element);
     void removeAt(size_t index);
+
     void setAt(size_t index, const T& toSet);
     short indexOf(const T& element) const;
+
     bool contains(const T& element) const;
+
     void reverse();
+    Vector reversed() const;
+
     void sort();
-    Vector map(void (*func)(T&));
+    Vector sorted() const;
+    
+    void map(void (*func)(T&));
+    Vector mapped(void (*func)(T&)) const;
 
     template <typename Func>
     void foreach(Func func) const;
 
-    Vector filter(bool(*predicate)(T& el));
+    void filter(bool(*predicate)(T& el));
+    Vector filtered(bool(*predicate)(T& el)) const;
+
     void shuffle();
+    Vector shuffled() const;
+
     Vector subarray(size_t start, short len = -1) const;
+
     bool isSubArrOf(const Vector& vect) const;
     bool isSubSetOf(Vector<T> vect) const;
+
     Vector distinct() const;
+
     bool isEmpty() const;
     void clear();
+
     T& min() const;
     T& max() const;
 
