@@ -1,4 +1,5 @@
-﻿#include <cassert>
+#include <cassert>
+#include <iostream>
 #include "String.h"
 
 void testDefaultConstructor() {
@@ -7,168 +8,237 @@ void testDefaultConstructor() {
     assert(str.getCapacity() == 10);
 }
 
-void testCharConstructor() {
+void testConstructorFromCStr() {
     String str("Hello");
     assert(str.getSize() == 5);
     assert(str.getChar(0) == 'H');
+    assert(str.getChar(4) == 'o');
+}
+
+void testConstructorWithCapacity() {
+    String str(20);
+    assert(str.getSize() == 0);
+    assert(str.getCapacity() == 20);
 }
 
 void testCopyConstructor() {
-    String str1("Copy");
-    String str2(str1);
-    assert(str2.getSize() == str1.getSize());
-    assert(str2.getChar(0) == 'C');
+    String str1("Hello");
+    String str2 = str1;
+    assert(str2.getSize() == 5);
+    assert(str2.getChar(0) == 'H');
+    assert(str2.getChar(4) == 'o');
 }
 
 void testAssignmentOperator() {
-    String str1("Assign");
+    String str1("Hello");
     String str2;
     str2 = str1;
-    assert(str2.getSize() == str1.getSize());
-    assert(str2.getChar(0) == 'A');
-}
-
-void testAppendChar() {
-    String str("Append");
-    str.append('!');
-    assert(str.getSize() == 7);
-    assert(str.getChar(6) == '!');
+    assert(str2.getSize() == 5);
+    assert(str2.getChar(0) == 'H');
+    assert(str2.getChar(4) == 'o');
 }
 
 void testAppendString() {
-    String str1("Hello");
-    String str2(" World");
-    str1.append(str2);
-    assert(str1.getSize() == 11);
-    assert(str1.contains(String(" World")));
+    String str("Hello");
+    str.append(" World");
+    assert(str.getSize() == 11);
+    assert(str.getChar(5) == ' ');
+    assert(str.getChar(10) == 'd');
+}
+
+void testAppendChar() {
+    String str("Hello");
+    str.append('!');
+    assert(str.getSize() == 6);
+    assert(str.getChar(5) == '!');
 }
 
 void testInsertChar() {
-    String str("Insert");
-    str.insert('X', 3);
-    assert(str.getChar(3) == 'X');
+    String str("Hello");
+    str.insert('X', 2);
+    assert(str.getSize() == 6);
+    assert(str.getChar(2) == 'X');
 }
 
 void testInsertString() {
-    String str1("Insert");
-    String str2(" Here");
-    str1.insert(str2, 6);
-    assert(str1.contains(String("Insert Here")));
+    String str("Hello");
+    str.insert("ABC", 2);
+    assert(str.getSize() == 8);
+    assert(str.getChar(2) == 'A');
+    assert(str.getChar(3) == 'B');
 }
 
 void testRemoveAt() {
-    String str("Remove");
-    str.removeAt(1);
-    assert(str.getSize() == 5);
-    assert(str.getChar(1) == 'm');
+    String str("Hello");
+    str.removeAt(2);
+    assert(str.getSize() == 4);
+    assert(str.getChar(2) == 'l');
 }
 
-void testFind() {
-    String str("Find me");
-    assert(str.indexOf(String("me")) == 5);
+void testRemoveSubstring() {
+    String str("Hello World");
+    str.remove("World");
+    assert(str.getSize() == 6);
+    assert(str.getChar(0) == 'H');
+}
+
+void testIndexOf() {
+    String str("Hello World");
+    assert(str.indexOf("World") == 6);
+    assert(str.indexOf("Test") == -1);
 }
 
 void testContains() {
-    String str("Contains substring");
-    assert(str.contains(String("substring")));
+    String str("Hello World");
+    assert(str.contains("Hello"));
+    assert(!str.contains("Test"));
+}
+
+void testSetCharAt() {
+    String str("Hello");
+    str.setCharAt('X', 1);
+    assert(str.getChar(1) == 'X');
 }
 
 void testReplaceAll() {
-    String str("Replace all");
-    str.replaceAll(String("all"), String("everything"));
-    assert(str.contains(String("Replace everything")));
+    String str("Hello World");
+    str.replaceAll("World", "Universe");
+    assert(str.getSize() == 14);
+    assert(str.getChar(6) == 'U');
 }
 
 void testReverse() {
-    String str("Reverse");
+    String str("Hello");
     str.reverse();
-    assert(str.getChar(0) == 'e');
+    assert(str.getChar(0) == 'o');
+    assert(str.getChar(4) == 'H');
+}
+
+void testReversed() {
+    String str("Hello");
+    String r = str.reversed();
+    assert(r.getChar(0) == 'o');
+    assert(r.getChar(4) == 'H');
+    assert(str.getChar(0) == 'H');  // original unchanged
 }
 
 void testStartsWith() {
-    String str("Starts");
-    assert(str.startsWith(String("Start")));
+    String str("Hello World");
+    assert(str.startsWith("Hello"));
+    assert(!str.startsWith("World"));
 }
 
 void testEndsWith() {
-    String str("Ends");
-    assert(str.endsWith(String("s")));
+    String str("Hello World");
+    assert(str.endsWith("World"));
+    assert(!str.endsWith("Hello"));
 }
 
 void testToLower() {
-    String str("TO LOWER");
+    String str("HELLO");
     str.toLower();
-    assert(str.getChar(0) == 't');
+    assert(str.getChar(0) == 'h');
+    assert(str.getChar(4) == 'o');
+}
+
+void testLowered() {
+    String str("HELLO");
+    String r = str.lowered();
+    assert(r.getChar(0) == 'h');
+    assert(r.getChar(4) == 'o');
 }
 
 void testToUpper() {
-    String str("to upper");
+    String str("hello");
     str.toUpper();
-    assert(str.getChar(0) == 'T');
+    assert(str.getChar(0) == 'H');
+    assert(str.getChar(4) == 'O');
+}
+
+void testUppered() {
+    String str("hello");
+    String r = str.uppered();
+    assert(r.getChar(0) == 'H');
+    assert(r.getChar(4) == 'O');
 }
 
 void testSubstr() {
-    String str("Substring test");
-    String substr = str.substr(0, 9);
-    assert(substr == String("Substring"));
+    String str("Hello World");
+    String sub = str.substr(6, 5);
+    assert(sub.getSize() == 5);
+    assert(sub.getChar(0) == 'W');
+    assert(sub.getChar(4) == 'd');
 }
 
-void testIsEmpty() {
-    String str;
-    assert(str.isEmpty());
+void testSubstrNegativeLen() {
+    String str("Hello World");
+    String sub = str.substr(6);
+    assert(sub.getSize() == 5);
+    assert(sub.getChar(0) == 'W');
+}
+
+void testPlusOperator() {
+    String str1("Hello");
+    String str2(" World");
+    String result = str1 + str2;
+    assert(result.getSize() == 11);
+    assert(result.getChar(10) == 'd');
+}
+
+void testEqualsOperator() {
+    String a("Test");
+    String b("Test");
+    String c("Wrong");
+    assert(a == b);
+    assert(a != c);
+}
+
+void testRelationalOperators() {
+    String a("abc");
+    String b("def");
+    assert(a < b);
+    assert(a <= b);
+    assert(b > a);
+    assert(b >= a);
 }
 
 void testClear() {
-    String str("Clear");
+    String str("Data");
     str.clear();
     assert(str.getSize() == 0);
-}
-
-void testOperators() {
-    String str1("Operator");
-    String str2(" Overload");
-    str1 += str2;
-    assert(str1.contains(String("Operator Overload")));
-}
-
-void testComparisonOperators() {
-    String str1("Comparison");
-    String str2("Comparison");
-    assert(str1 == str2);
-    assert(!(str1 != str2));
-}
-
-void testConcatenationOperator() {
-    String str1("Hello");
-    String str2(" World");
-    String str3 = str1 + str2;
-    assert(str3 == String("Hello World"));
+    assert(str.isEmpty());
 }
 
 int main() {
     testDefaultConstructor();
-    testCharConstructor();
+    testConstructorFromCStr();
+    testConstructorWithCapacity();
     testCopyConstructor();
     testAssignmentOperator();
-    testAppendChar();
     testAppendString();
+    testAppendChar();
     testInsertChar();
     testInsertString();
     testRemoveAt();
-    testFind();
+    testRemoveSubstring();
+    testIndexOf();
     testContains();
+    testSetCharAt();
     testReplaceAll();
     testReverse();
+    testReversed();
     testStartsWith();
     testEndsWith();
     testToLower();
+    testLowered();
     testToUpper();
+    testUppered();
     testSubstr();
-    testIsEmpty();
+    testSubstrNegativeLen();
+    testPlusOperator();
+    testEqualsOperator();
+    testRelationalOperators();
     testClear();
-    testOperators();
-    testComparisonOperators();
-    testConcatenationOperator();
 
     std::cout << "All tests passed successfully!" << std::endl;
     return 0;
