@@ -114,8 +114,9 @@ void Vector<T>::out(std::ostream& direction, const String& delimiter) const {
 }
 
 template <typename T>
-void Vector<T>::push(const T& element) {
+Vector<T>& Vector<T>::push(const T& element) {
     add(element, this->length);
+    return *this;
 }
 
 template <typename T>
@@ -153,11 +154,11 @@ void Vector<T>::add(const Vector<T>& vect, size_t index) {
 }
 
 template <typename T>
-bool Vector<T>::remove(const T& element) {
+Vector<T>& Vector<T>::remove(const T& element) {
     short from = indexOf(element);
-    if (from == -1) return false;
+    if (from == -1) return *this;
     removeAt(from);
-    return true;
+    return *this;
 }
 
 template <typename T>
@@ -202,6 +203,13 @@ void Vector<T>::reverse() {
 }
 
 template <typename T>
+Vector<T> Vector<T>::reversed() const{
+    Vector<T> toReturn = *this;
+    toReturn.reverse();
+    return toReturn;
+}
+
+template <typename T>
 void Vector<T>::sort() {
     for (size_t i = 0; i < this->length; i++) {
         size_t minIndex = i;
@@ -215,11 +223,24 @@ void Vector<T>::sort() {
 }
 
 template <typename T>
-Vector<T> Vector<T>::map(void (*func)(T&)) {
-    for (size_t i = 0; i < this->length; i++) {
+Vector<T> Vector<T>::sorted() const {
+    Vector<T> toReturn = *this;
+    toReturn.sort();
+    return toReturn;
+}
+
+template <typename T>
+void Vector<T>::map(void (*func)(T&)) {
+    for (size_t i = 0; i < this->getLength(); i++) {
         func(this->data[i]);
     }
-    return *this;
+}
+
+template <typename T>
+Vector<T> Vector<T>::mapped(void (*func)(T&)) const {
+    Vector<T> toReturn = *this;
+    toReturn.map(func);
+    return toReturn;
 }
 
 template <typename T>
@@ -231,13 +252,18 @@ void Vector<T>::foreach(Func func) const {
 }
 
 template <typename T>
-Vector<T> Vector<T>::filter(bool(*predicate)(T& el)) {
-    Vector<T> toReturn;
+void Vector<T>::filter(bool(*predicate)(T& el)) {
     for (size_t i = 0; i < this->length; i++) {
-        if (predicate(this->data[i])) {
-            toReturn.push(this->data[i]);
+        if (!predicate(this->data[i])) {
+            this->removeAt(i--);
         }
     }
+}
+
+template <typename T>
+Vector<T> Vector<T>::filtered(bool(*predicate)(T& el)) const {
+    Vector<T> toReturn;
+    toReturn.filter(predicate);
     return toReturn;
 }
 
@@ -246,6 +272,13 @@ void Vector<T>::shuffle() {
     for (size_t i = 0; i < this->length; i++) {
         std::swap(this->data[i], this->data[rand() % this->length]);
     }
+}
+
+template <typename T>
+Vector<T> Vector<T>::shuffled() const {
+    Vector<T> toReturn = *this;
+    toReturn.shuffle();
+    return toReturn;
 }
 
 template <typename T>
@@ -279,7 +312,7 @@ bool Vector<T>::isSubArrOf(const Vector<T>& vect) const {
 template <typename T>
 bool Vector<T>::isSubSetOf(Vector<T> vect) const {
     for (size_t i = 0; i < this->length; i++) {
-        if (!vect.contains(this[i])) {
+        if (!vect.contains(this->data[i])) {
             return false;
         }
     }
@@ -312,24 +345,24 @@ void Vector<T>::clear() {
 
 template <typename T>
 T& Vector<T>::min() const {
-    T min = this->data[0];
+    size_t minIndex = 0;
     for (size_t i = 1; i < this->length; i++) {
-        if (min > this->data[i]) {
-            min = this->data[i];
+        if (this->data[minIndex] > this->data[i]) {
+            minIndex = i;
         }
     }
-    return min;
+    return this->data[minIndex];
 }
 
 template <typename T>
 T& Vector<T>::max() const {
-    T max = this->data[0];
+    size_t maxIndex = 0;
     for (size_t i = 1; i < this->length; i++) {
-        if (max < this->data[i]) {
-            max = this->data[i];
+        if (this->data[maxIndex] < this->data[i]) {
+            maxIndex = i;
         }
     }
-    return max;
+    return this->data[maxIndex];
 }
 
 template <typename T>
