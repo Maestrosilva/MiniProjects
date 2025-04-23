@@ -102,12 +102,14 @@ void String::insert(const String& str, size_t index) {
     }
 }
 
-void String::append(const String& str) {
-    insert(str, this->size);
+String& String::append(const String& str) {
+    this->insert(str, this->size);
+    return *this;
 }
 
-void String::append(char ch) {
-    insert(ch, this->size);
+String& String::append(char ch) {
+    this->insert(ch, this->size);
+    return *this;
 }
 
 void String::removeAt(size_t index) {
@@ -124,13 +126,13 @@ void String::removeAt(size_t index) {
     }
 }
 
-bool String::remove(const String& substr) {
+String& String::remove(const String& substr) {
     short from = indexOf(substr);
-    if (from == -1) return false;
+    if (from == -1) return *this;
     for (size_t i = 0; i < substr.getSize(); ++i) {
         removeAt(from);
     }
-    return true;
+    return *this;
 }
 
 short String::indexOf(const String& str) const {
@@ -153,6 +155,13 @@ bool String::contains(const String& str) const {
     return indexOf(str) >= 0;
 }
 
+void String::setCharAt(char ch, size_t index) {
+    if (index >= size) {
+        throw std::out_of_range("Index out of bounds!");
+    }
+    this->data[index] = ch;
+}
+
 void String::replaceAll(const String& oldStr, const String& newStr) {
     short index = indexOf(oldStr);
     while (index != -1) {
@@ -169,16 +178,18 @@ void String::reverse() {
     this->data[this->size] = '\0';
 }
 
+String String::reversed() const{
+    String toReturn = *this;
+    toReturn.reverse();
+    return toReturn;
+}
+
 bool String::startsWith(const String& prefix) const {
     return indexOf(prefix) == 0;
 }
 
 bool String::endsWith(const String& suffix) const {
-    String reversedThis = *this;
-    String reversedSuffix = suffix;
-    reversedThis.reverse();
-    reversedSuffix.reverse();
-    return reversedThis.indexOf(reversedSuffix) == 0;
+    return this->reversed().indexOf(suffix.reversed()) == 0;
 }
 
 void String::toUpper() {
@@ -189,12 +200,24 @@ void String::toUpper() {
     }
 }
 
+String String::uppered() const {
+    String toReturn = *this;
+    toReturn.toUpper();
+    return toReturn;
+}
+
 void String::toLower() {
     for (size_t i = 0; i < this->size; ++i) {
         if (this->data[i] >= 'A' && this->data[i] <= 'Z') {
             this->data[i] += ('a' - 'A');
         }
     }
+}
+
+String String::lowered() const {
+    String toReturn = *this;
+    toReturn.toLower();
+    return toReturn;
 }
 
 String String::substr(size_t start, short len) const {
@@ -228,26 +251,26 @@ String String::operator+=(const String& other) {
     return *this;
 }
 
-bool String::operator<(const String& other) { 
-    return strcmp(this->data, other.data) < 0; 
+bool String::operator<(const String& other) {
+    return strcmp(this->data, other.data) < 0;
 }
 bool String::operator<=(const String& other) {
     return strcmp(this->data, other.data) <= 0;
 }
-bool String::operator>(const String& other) { 
-    return strcmp(this->data, other.data) > 0; 
+bool String::operator>(const String& other) {
+    return strcmp(this->data, other.data) > 0;
 }
 bool String::operator>=(const String& other) {
     return strcmp(this->data, other.data) >= 0;
 }
-bool String::operator==(const String& other) { 
-    return strcmp(this->data, other.data) == 0; 
+bool String::operator==(const String& other) {
+    return strcmp(this->data, other.data) == 0;
 }
 bool String::operator!=(const String& other) {
-    return strcmp(this->data, other.data) != 0; 
+    return strcmp(this->data, other.data) != 0;
 }
 
-char& String::operator[](size_t index) const{
+char& String::operator[](size_t index) const {
     if (index >= this->size) {
         throw std::out_of_range("Index out of bounds!");
     }
@@ -260,8 +283,8 @@ void operator<<(std::ostream& direction, const String& str) {
 
 String operator+(const String& str1, const String& str2) {
     String result(str1);
-    result.append(str2);
-    return result;
+    result;
+    return result.append(str2);
 }
 
 String::~String() {
