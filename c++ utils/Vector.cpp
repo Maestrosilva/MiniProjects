@@ -43,7 +43,7 @@ void Vector<T>::populate(T*& destination, const T* source, size_t length) {
         throw std::runtime_error("Null pointer dereferenced!");
     }
     for (size_t i = 0; i < length; i++) {
-        destination[i] = source[i];
+        destination[i] = T(source[i]);
     }
 }
 
@@ -114,9 +114,8 @@ void Vector<T>::out(std::ostream& direction, const String& delimiter) const {
 }
 
 template <typename T>
-Vector<T>& Vector<T>::push(const T& element) {
+void Vector<T>::push(const T& element) {
     add(element, this->length);
-    return *this;
 }
 
 template <typename T>
@@ -154,11 +153,11 @@ void Vector<T>::add(const Vector<T>& vect, size_t index) {
 }
 
 template <typename T>
-Vector<T>& Vector<T>::remove(const T& element) {
+bool Vector<T>::remove(const T& element) {
     short from = indexOf(element);
-    if (from == -1) return *this;
+    if (from == -1) return false;
     removeAt(from);
-    return *this;
+    return true;
 }
 
 template <typename T>
@@ -203,13 +202,6 @@ void Vector<T>::reverse() {
 }
 
 template <typename T>
-Vector<T> Vector<T>::reversed() const{
-    Vector<T> toReturn = *this;
-    toReturn.reverse();
-    return toReturn;
-}
-
-template <typename T>
 void Vector<T>::sort() {
     for (size_t i = 0; i < this->length; i++) {
         size_t minIndex = i;
@@ -223,24 +215,11 @@ void Vector<T>::sort() {
 }
 
 template <typename T>
-Vector<T> Vector<T>::sorted() const {
-    Vector<T> toReturn = *this;
-    toReturn.sort();
-    return toReturn;
-}
-
-template <typename T>
-void Vector<T>::map(void (*func)(T&)) {
-    for (size_t i = 0; i < this->getLength(); i++) {
+Vector<T> Vector<T>::map(void (*func)(T&)) {
+    for (size_t i = 0; i < this->length; i++) {
         func(this->data[i]);
     }
-}
-
-template <typename T>
-Vector<T> Vector<T>::mapped(void (*func)(T&)) const {
-    Vector<T> toReturn = *this;
-    toReturn.map(func);
-    return toReturn;
+    return *this;
 }
 
 template <typename T>
@@ -252,18 +231,13 @@ void Vector<T>::foreach(Func func) const {
 }
 
 template <typename T>
-void Vector<T>::filter(bool(*predicate)(T& el)) {
+Vector<T> Vector<T>::filter(bool(*predicate)(T& el)) {
+    Vector<T> toReturn;
     for (size_t i = 0; i < this->length; i++) {
-        if (!predicate(this->data[i])) {
-            this->removeAt(i--);
+        if (predicate(this->data[i])) {
+            toReturn.push(this->data[i]);
         }
     }
-}
-
-template <typename T>
-Vector<T> Vector<T>::filtered(bool(*predicate)(T& el)) const {
-    Vector<T> toReturn;
-    toReturn.filter(predicate);
     return toReturn;
 }
 
@@ -272,13 +246,6 @@ void Vector<T>::shuffle() {
     for (size_t i = 0; i < this->length; i++) {
         std::swap(this->data[i], this->data[rand() % this->length]);
     }
-}
-
-template <typename T>
-Vector<T> Vector<T>::shuffled() const {
-    Vector<T> toReturn = *this;
-    toReturn.shuffle();
-    return toReturn;
 }
 
 template <typename T>
@@ -312,7 +279,7 @@ bool Vector<T>::isSubArrOf(const Vector<T>& vect) const {
 template <typename T>
 bool Vector<T>::isSubSetOf(Vector<T> vect) const {
     for (size_t i = 0; i < this->length; i++) {
-        if (!vect.contains(this->data[i])) {
+        if (!vect.contains(this[i])) {
             return false;
         }
     }
@@ -345,24 +312,26 @@ void Vector<T>::clear() {
 
 template <typename T>
 T& Vector<T>::min() const {
-    size_t minIndex = 0;
+    T& min = this->data[0];
+    this->out();
     for (size_t i = 1; i < this->length; i++) {
-        if (this->data[minIndex] > this->data[i]) {
-            minIndex = i;
+        if (min > this->data[i]) {
+            min = this->data[i];
         }
     }
-    return this->data[minIndex];
+    return min;
 }
 
 template <typename T>
 T& Vector<T>::max() const {
-    size_t maxIndex = 0;
+    T& max = this->data[0];
+    this->out();
     for (size_t i = 1; i < this->length; i++) {
-        if (this->data[maxIndex] < this->data[i]) {
-            maxIndex = i;
+        if (max < this->data[i]) {
+            max = this->data[i];
         }
     }
-    return this->data[maxIndex];
+    return max;
 }
 
 template <typename T>
